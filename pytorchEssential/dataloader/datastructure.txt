@@ -1,0 +1,19 @@
+data
+`-- hymenoptera_data
+    |-- train
+    |   |-- ants
+            |-- 0013035.jpg
+            |-- 1030023514_aad5c608f9.jpg
+            |-- 1095476100_3906d8afde.jpg
+            |-- 1099452230_d1949d3250.jpg
+            |-- 116570827_e9c126745d.jpg
+            |-- 1225872729_6f0856588f.jpg
+            |-- 1262877379_64fcada201.jpg
+            |-- 1269756697_0bce92cdab.jpg
+            |-- 1286984635_5119e80de1.jpg
+            |-- ...
+    |   `-- bees
+    `-- val
+        |-- ants
+        `-- bees
+https://www.bilibili.com/video/BV1EG4y1Z7WW
