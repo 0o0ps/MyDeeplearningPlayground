@@ -8,7 +8,7 @@ init = Compose([
                 ] 
 )
 ### 下载CIFAR10数据集，root为数据集存放路径，train为True表示下载训练集，False表示下载测试集
-###? 暂时不懂什么叫train?in
+###? 暂时不懂什么叫train? not valid！ test dataset is smaller ?
 cifar10 = datasets.CIFAR10(root = "./data", train= True ,transform = init ,download = True)
 # cifar10 = datasets.CIFAR10(root = "./data", train= False, download = True)
 # print(cifar10.__init__)
