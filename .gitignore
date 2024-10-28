@@ -1,3 +1,4 @@
 pytorchEssential/data
 pytorchEssential/1_3dataset_transform/data
 pytorchEssential/1_4dataset_dataloader/data
+pytorchEssential/2_3maxPool/logs

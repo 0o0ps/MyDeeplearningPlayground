@@ -50,3 +50,4 @@ print(output3)
 
 
 ### dilation是指卷积核的间隔，dilation = 2表示卷积核每隔一个元素进行卷积
+
