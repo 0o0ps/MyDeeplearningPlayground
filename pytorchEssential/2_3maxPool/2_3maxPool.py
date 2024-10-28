@@ -51,6 +51,7 @@ for data in cifar10loader:
     outputImg =  pool1(img)
     writer.add_images('after', outputImg, step)
     step += 1
-    
+
+writer.close()
 
 # class MaxPool(torch.)
