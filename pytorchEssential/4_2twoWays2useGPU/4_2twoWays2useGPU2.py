@@ -1,5 +1,8 @@
+### 两种使用GPU的方式
+### 将数据、模型和loss都放到GPU上，加速计算
+### 第二种方式，to device
 
-from cgi import test
+from operator import is_
 import torch
 from torchvision import transforms,datasets
 from torch.utils.data import DataLoader
@@ -9,8 +12,8 @@ from torch.utils.tensorboard import SummaryWriter
 import torchvision
 import time
 
-
-
+### 选择设备
+device = torch.device('cuda:2' if torch.cuda.is_available() else 'cpu')
 ### 数据集
 cifar10_train = datasets.CIFAR10(root='../1_3dataset_transform/data', train=True, download=True, transform=transforms.ToTensor())
 cifar10_test = datasets.CIFAR10(root='../1_3dataset_transform/data', train=False, download=True, transform=transforms.ToTensor())
@@ -43,11 +46,12 @@ class Net(nn.Module):
         x = self.model(x)
         return x    
 
-if __name__ == "__main__":
-    net = Net() 
+net = Net() 
+net = net.to(device) #!!! 将模型放到GPU上
     
 ### 分类问题
 loss_fn = nn.CrossEntropyLoss()
+loss_fn = loss_fn.to(device)  #!!! 将loss放到GPU上
 ### optimizer
 learningRate = 1e-2
 optimizer = torch.optim.SGD(net.parameters(), lr=learningRate)
@@ -59,13 +63,15 @@ epoch = 20
 board = SummaryWriter(log_dir='logs')
 ######################## train part #######################
 ## 每一个epoch
-start = time.time()
+start = time.time() ## 计时
 for i in range(epoch):
     net.train() ## 训练模式
     print(f"-------------------epoch {i+1} start--------------------")
     ### each batchsize
     for data in cifar10Loader_train:
         img, target = data
+        img = img.to(device)
+        target = target.to(device) #!!! 将数据放到GPU上
         output = net(img)
         loss = loss_fn(output, target)
         optimizer.zero_grad() # 梯度清零
@@ -76,7 +82,8 @@ for i in range(epoch):
             print(f"No {trainSteps} train : loss {loss.item()}")
             board.add_scalar('train_loss', loss.item(), trainSteps)
             end = time.time()
-            print(f'time batch{trainSteps}:{end - start}s')
+            times = end - start
+            print(f'time batch{trainSteps}:{times}s')
 
     ######################## test part #######################
     net.eval() ## 测试模式
@@ -87,6 +94,8 @@ for i in range(epoch):
     with torch.no_grad():
         for data in cifar10Loader_test:
             imgs , target = data
+            imgs = imgs.to(device)
+            target = target.to(device) 
             # print(len(data[1]))
             out = net(imgs)
             loss = loss_fn(out,target)

@@ -1,5 +1,8 @@
+### 两种使用GPU的方式
+### 将数据、模型和loss都放到GPU上，加速计算
+### 第一种方式，不常用
 
-from cgi import test
+from operator import is_
 import torch
 from torchvision import transforms,datasets
 from torch.utils.data import DataLoader
@@ -45,9 +48,13 @@ class Net(nn.Module):
 
 if __name__ == "__main__":
     net = Net() 
+    if torch.cuda.is_available():
+        net = net.cuda()  #!!! 将模型放到GPU上
     
 ### 分类问题
 loss_fn = nn.CrossEntropyLoss()
+if torch.cuda.is_available():
+    loss_fn = loss_fn.cuda()  #!!! 将loss放到GPU上
 ### optimizer
 learningRate = 1e-2
 optimizer = torch.optim.SGD(net.parameters(), lr=learningRate)
@@ -59,13 +66,16 @@ epoch = 20
 board = SummaryWriter(log_dir='logs')
 ######################## train part #######################
 ## 每一个epoch
-start = time.time()
+start = time.time() ## 计时
 for i in range(epoch):
     net.train() ## 训练模式
     print(f"-------------------epoch {i+1} start--------------------")
     ### each batchsize
     for data in cifar10Loader_train:
         img, target = data
+        if torch.cuda.is_available():
+            img = img.cuda()
+            target = target.cuda() #!!! 将数据放到GPU上
         output = net(img)
         loss = loss_fn(output, target)
         optimizer.zero_grad() # 梯度清零
@@ -76,7 +86,8 @@ for i in range(epoch):
             print(f"No {trainSteps} train : loss {loss.item()}")
             board.add_scalar('train_loss', loss.item(), trainSteps)
             end = time.time()
-            print(f'time batch{trainSteps}:{end - start}s')
+            times = end - start
+            print(f'time batch{trainSteps}:{times}s')
 
     ######################## test part #######################
     net.eval() ## 测试模式
@@ -87,6 +98,9 @@ for i in range(epoch):
     with torch.no_grad():
         for data in cifar10Loader_test:
             imgs , target = data
+            if torch.cuda.is_available():
+                imgs = imgs.cuda()
+                target = target.cuda() 
             # print(len(data[1]))
             out = net(imgs)
             loss = loss_fn(out,target)
