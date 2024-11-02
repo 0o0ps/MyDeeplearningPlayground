@@ -2,3 +2,5 @@ pytorchEssential/data
 pytorchEssential/1_3dataset_transform/data
 pytorchEssential/1_4dataset_dataloader/data
 pytorchEssential/2_3maxPool/logs
+pytorchEssential/3_4model_save_load/vgg.pth
+pytorchEssential/3_4model_save_load/vgg_state.pth

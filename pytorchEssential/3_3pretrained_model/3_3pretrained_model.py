@@ -23,3 +23,13 @@ pretrainedModel.classifier[7] = nn.Linear(14096,10)
 print(pretrainedModel)
 ### 请仔细观察输出，看看有什么不同，这三种方式有什么区别
 ###? 如何删除一层？
+###? 如何修改一整个module？
+
+import torch
+import torchvision.models as models
+
+model = models.resnet18(pretrained=True)
+print(model)
+# 删除最后的全连接层
+model.fc = torch.nn.Identity()
+
